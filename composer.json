@@ -1,5 +1,5 @@
 {
-    "name": "slm/locale",
+    "name": "unjudder/zf2-locale",
     "description": "Automatic detection of locales for Zend Framework 2",
     "type": "library",
     "keywords": [
@@ -13,6 +13,10 @@
             "name": "Jurian Sluiman",
             "email": "jurian@soflomo.com",
             "homepage": "http://juriansluiman.nl"
+        },
+        {
+            "name": "Alrik Zachert",
+            "email": "alrik.zachert@unjudder.com"
         }
     ],
     "require": {

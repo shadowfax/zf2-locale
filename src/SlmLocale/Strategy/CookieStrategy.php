@@ -49,7 +49,55 @@ use Zend\Http\Request as HttpRequest;
 
 class CookieStrategy extends AbstractStrategy
 {
-    const COOKIE_NAME = 'slm_locale';
+    const DEFAULT_COOKIE_NAME = 'slm_locale';
+
+    protected $cookieName = self::DEFAULT_COOKIE_NAME;
+
+    protected $cookieExpires = null;
+
+    protected $cookiePath = null;
+
+    protected $cookieDomain = null;
+
+    protected $cookieSecure = null;
+
+    protected $cookieHttponly = null;
+
+    protected $cookieMaxAge = null;
+
+    protected $cookieVersion = null;
+
+    public function setOptions(array $options = array())
+    {
+    	if (isset($options['cookie'])) {
+    		$cookieConfig = $options['cookie'];
+
+    		if (isset($cookieConfig['name'])) {
+    			$this->cookieName = $cookieConfig['name'];
+    		}
+    		if (isset($cookieConfig['expires'])) {
+    			$this->cookiePath = $cookieConfig['expires'];
+    		}
+    		if (isset($cookieConfig['path'])) {
+    			$this->cookiePath = $cookieConfig['path'];
+    		}
+    		if (isset($cookieConfig['domain'])) {
+    			$this->cookieDomain = $cookieConfig['domain'];
+    		}
+    		if (isset($cookieConfig['secure'])) {
+    			$this->cookieSecure = $cookieConfig['secure'];
+    		}
+    		if (isset($cookieConfig['httponly'])) {
+    			$this->cookieHttponly = $cookieConfig['httponly'];
+    		}
+    		if (isset($cookieConfig['maxAge'])) {
+    			$this->cookieMaxAge = $cookieConfig['maxAge'];
+    		}
+    		if (isset($cookieConfig['version'])) {
+    			$this->cookieVersion = $cookieConfig['version'];
+    		}
+    	}
+    }
 
     public function detect(LocaleEvent $event)
     {
@@ -63,11 +111,11 @@ class CookieStrategy extends AbstractStrategy
         }
 
         $cookie = $request->getCookie();
-        if (!$cookie || !$cookie->offsetExists(self::COOKIE_NAME)) {
+        if (!$cookie || !$cookie->offsetExists($this->cookieName)) {
             return;
         }
 
-        $locale    = $cookie->offsetGet(self::COOKIE_NAME);
+        $locale    = $cookie->offsetGet($this->cookieName);
         $supported = $event->getSupported();
 
         if (in_array($locale, $supported)) {
@@ -88,8 +136,8 @@ class CookieStrategy extends AbstractStrategy
 
         // Omit Set-Cookie header when cookie is present
         if ($cookie instanceof Cookie
-            && $cookie->offsetExists(self::COOKIE_NAME)
-            && $locale === $cookie->offsetGet(self::COOKIE_NAME)
+            && $cookie->offsetExists($this->cookieName)
+            && $locale === $cookie->offsetGet($this->cookieName)
         ) {
             return;
         }
@@ -97,7 +145,13 @@ class CookieStrategy extends AbstractStrategy
         $response = $event->getResponse();
         $cookies  = $response->getCookie();
 
-        $setCookie = new SetCookie(self::COOKIE_NAME, $locale);
+        $setCookie = new SetCookie(
+        	$this->cookieName, $locale,
+        	$this->cookieExpires, $this->cookiePath,
+        	$this->cookieDomain, $this->cookieSecure,
+        	$this->cookieHttponly, $this->cookieMaxAge,
+        	$this->cookieVersion
+        );
         $response->getHeaders()->addHeader($setCookie);
     }
 }

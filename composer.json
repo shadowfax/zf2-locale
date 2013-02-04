@@ -1,5 +1,5 @@
 {
-    "name": "unjudder/zf2-locale",
+    "name": "unjudder/locale",
     "description": "Automatic detection of locales for Zend Framework 2",
     "type": "library",
     "keywords": [
@@ -22,7 +22,10 @@
     "require": {
         "php": ">=5.3.3.",
         "ext-intl": "*",
-        "zendframework/zendframework": "2.*"
+        "zendframework/zend-eventmanager": "2.*",
+        "zendframework/zend-http": "2.*",
+        "zendframework/zend-modulemanager": "2.*",
+        "zendframework/zend-stdlib": "2.*"
     },
     "autoload": {
         "psr-0": {
